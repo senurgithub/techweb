@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Cybernetic Future</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.6); }
+        }
+        
+        @keyframes neonGlow {
+            0%, 100% { text-shadow: 0 0 5px #00fffc, 0 0 10px #00fffc, 0 0 15px #00fffc; }
+            50% { text-shadow: 0 0 10px #00fffc, 0 0 20px #00fffc, 0 0 30px #00fffc; }
+        }
+        
+        @keyframes scanline {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100vh; }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.4; }
+        }
+        
+        /* Animation classes */
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+        
+        .neon-glow {
+            animation: neonGlow 2s ease-in-out infinite;
+        }
+        
+        .rotate-animation {
+            animation: rotate 20s linear infinite;
+        }
+        
+        .flicker-animation {
+            animation: flicker 10s linear infinite;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        
+        /* Custom styles */
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(0, 20, 20, 0.3) 50%, 
+                transparent 100%);
+            pointer-events: none;
+            z-index: -1;
+            animation: scanline 8s linear infinite;
+        }
+        
+        .cyber-border {
+            position: relative;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .cyber-border::before, .cyber-border::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00fffc;
+            pointer-events: none;
+        }
+        
+        .cyber-border::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .cyber-border::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        .cyber-card {
+            background: rgba(10, 10, 20, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+        
+        .cyber-card:hover::before {
+            left: 100%;
+        }
+        
+        .cyber-button {
+            background: linear-gradient(45deg, #003333, #006666);
+            border: 1px solid #00fffc;
+            color: #00fffc;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-button:hover {
+            background: linear-gradient(45deg, #006666, #009999);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            color: white;
+        }
+        
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.4),
+                transparent
+            );
+            transition: 0.5s;
+        }
+        
+        .cyber-button:hover::before {
+            left: 100%;
+        }
+        
+        .neon-text {
+            color: #00fffc;
+            text-shadow: 0 0 5px #00fffc;
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(#00fffc, #009999);
+            border-radius: 4px;
+        }
+        
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        /* Cyberpunk terminal effect */
+        .terminal {
+            background-color: rgba(0, 20, 20, 0.7);
+            border: 1px solid #00fffc;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(to right, #003333, #006666);
+            border-bottom: 1px solid #00fffc;
+        }
+        
+        .terminal-header {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            color: #00fffc;
+            font-weight: bold;
+        }
+        
+        .terminal-controls {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+        }
+        
+        .terminal-control {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+        
+        .terminal-content {
+            padding: 40px 20px 20px;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .command-line {
+            color: #00fffc;
+        }
+        
+        .command-line::before {
+            content: '> ';
+        }
+        
+        .command-output {
+            color: #00ff99;
+            margin-top: 10px;
+        }
+        
+        .blinking-cursor {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="font-mono">
+    <!-- Floating particles -->
+    <div id="particles-js"></div>
+    
+    <!-- Floating decorative elements -->
+    <div class="fixed top-1/4 left-1/4 w-32 h-32 rounded-full bg-cyan-500 bg-opacity-10 blur-3xl -z-10"></div>
+    <div class="fixed bottom-1/3 right-1/4 w-40 h-40 rounded-full bg-teal-500 bg-opacity-10 blur-3xl -z-10"></div>
+    <div class="fixed top-1/2 right-1/2 w-24 h-24 rounded-full bg-emerald-500 bg-opacity-10 blur-3xl -z-10"></div>
+    
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-black bg-opacity-80 backdrop-blur-md border-b border-cyan-500 border-opacity-30">
+        <div class="max-w-7xl mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-600 to-emerald-600 flex items-center justify-center pulse-glow">
+                        <i class="fas fa-brain text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold neon-text flicker-animation">NEXUS</span>
+                </div>
+                
+                <div class="hidden lg:flex items-center space-x-10">
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition hover:neon-glow">SYSTEMS</a>
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition hover:neon-glow">NETWORK</a>
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition hover:neon-glow">DATA</a>
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition hover:neon-glow">SECURITY</a>
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition hover:neon-glow">ACCESS</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="px-5 py-2 rounded-lg text-gray-300 hover:text-cyan-400 transition hover:neon-glow">
+                        LOGIN
+                    </button>
+                    <button class="px-5 py-2 cyber-button pulse-glow">
+                        CONNECT
+                    </button>
+                    <button class="lg:hidden text-gray-300 hover:text-cyan-400">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-36 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-16 md:mb-0 fade-in">
+                <div class="flex items-center mb-6">
+                    <div class="h-px w-12 bg-gradient-to-r from-cyan-500 to-emerald-500"></div>
+                    <span class="ml-4 text-cyan-300 flicker-animation">SYSTEM INITIALIZED</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6 glow-text">
+                    <span class="neon-text">CYBERNETIC</span> 
+                    <br>FUTURE 
+                    <br><span class="text-emerald-400">AWAITS</span>
+                </h1>
+                
+                <p class="text-xl text-gray-300 mb-10 max-w-lg">
+                    Upgrade your reality with our neural interface systems. Experience the next evolution of human-machine symbiosis.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                    <button class="px-8 py-4 cyber-button pulse-glow font-medium flex items-center justify-center">
+                        <i class="fas fa-terminal mr-3"></i> COMMAND LINE
+                    </button>
+                    <button class="px-8 py-4 border border-cyan-500 rounded-lg hover:bg-cyan-900 hover:bg-opacity-20 transition font-medium text-cyan-400">
+                        EXPLORE MODULES
+                    </button>
+                </div>
+                
+                <div class="mt-12 flex flex-wrap items-center gap-6">
+                    <div class="flex items-center">
+                        <div class="flex -space-x-3">
+                            <div class="w-10 h-10 rounded-full border-2 border-gray-800 bg-cyan-900 flex items-center justify-center">
+                                <i class="fas fa-user-secret text-cyan-400"></i>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border-2 border-gray-800 bg-emerald-900 flex items-center justify-center">
+                                <i class="fas fa-robot text-emerald-400"></i>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border-2 border-gray-800 bg-purple-900 flex items-center justify-center">
+                                <i class="fas fa-code text-purple-400"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium">25,000+ USERS</p>
+                            <p class="text-xs text-gray-400">CONNECTED TO SYSTEM</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="flex">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                        </div>
+                        <span class="ml-2 text-sm">4.9 (3.7K REVIEWS)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2 relative fade-in delay-1">
+                <!-- Floating orb decoration -->
+                <div class="absolute -top-20 -left-20 w-64 h-64 bg-gradient-to-br from-cyan-500 to-emerald-500 rounded-full mix-blend-screen opacity-10 blur-3xl float-animation"></div>
+                
+                <!-- Main hero terminal -->
+                <div class="cyber-card rounded-xl overflow-hidden h-96">
+                    <div class="terminal h-full">
+                        <div class="terminal-header">NEXUS TERMINAL v3.7.2</div>
+                        <div class="terminal-controls">
+                            <div class="terminal-control bg-red-500"></div>
+                            <div class="terminal-control bg-yellow-500"></div>
+                            <div class="terminal-control bg-green-500"></div>
+                        </div>
+                        <div class="terminal-content">
+                            <div class="command-line">system status --all</div>
+                            <div class="command-output">
+                                <div>> NEXUS CORE: <span class="text-green-400">ONLINE</span></div>
+                                <div>> NEURAL NETWORK: <span class="text-green-400">SYNCED</span></div>
+                                <div>> QUANTUM LINK: <span class="text-yellow-400">ESTABLISHING</span></div>
+                                <div>> DATA STREAM: <span class="text-green-400">ACTIVE</span></div>
+                                <div>> SECURITY PROTOCOLS: <span class="text-green-400">ENABLED</span></div>
+                            </div>
+                            <div class="command-line mt-4">connect --user anonymous</div>
+                            <div class="command-output">
+                                <div>> WELCOME TO NEXUS NETWORK</div>
+                                <div>> DOWNLOADING INTERFACE...</div>
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-800 rounded h-4">
+                                        <div class="bg-gradient-to-r from-cyan-500 to-emerald-500 h-full rounded" style="width: 72%"></div>
+                                    </div>
+                                    <span class="ml-2 text-xs">72%</span>
+                                </div>
+                            </div>
+                            <div class="command-line mt-4 blinking-cursor">_</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Floating tech badges -->
+                <div class="mt-10 grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="cyber-card p-4 rounded-lg flex items-center">
+                        <div class="w-12 h-12 rounded-lg bg-cyan-500 bg-opacity-20 flex items-center justify-center mr-3 pulse-glow">
+                            <i class="fas fa-microchip text-cyan-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">NEURAL CHIPS</p>
+                            <p class="text-xs text-gray-400">UPGRADE</p>
+                        </div>
+                    </div>
+                    <div class="cyber-card p-4 rounded-lg flex items-center">
+                        <div class="w-12 h-12 rounded-lg bg-emerald-500 bg-opacity-20 flex items-center justify-center mr-3 pulse-glow">
+                            <i class="fas fa-shield-alt text-emerald-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">QUANTUM ENCRYPTION</p>
+                            <p class="text-xs text-gray-400">SECURE</p>
+                        </div>
+                    </div>
+                    <div class="cyber-card p-4 rounded-lg flex items-center">
+                        <div class="w-12 h-12 rounded-lg bg-purple-500 bg-opacity-20 flex items-center justify-center mr-3 pulse-glow">
+                            <i class="fas fa-bolt text-purple-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">NANOSPEED</p>
+                            <p class="text-xs text-gray-400">PERFORMANCE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Clients Section -->
+    <section class="py-16 bg-black bg-opacity-50 border-t border-b border-cyan-500 border-opacity-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-cyan-300 mb-12 flicker-animation">TRUSTED BY CORPORATE OVERLORDS</p>
+            <div class="flex flex-wrap justify-center items-center gap-12 opacity-80 hover:opacity-100 transition">
+                <div class="text-3xl font-bold text-cyan-400">CYBERDYNE</div>
+                <div class="text-3xl font-bold text-emerald-400">OCP</div>
+                <div class="text-3xl font-bold text-purple-400">TYRELL</div>
+                <div class="text-3xl font-bold text-red-400">W-Y</div>
+                <div class="text-3xl font-bold text-yellow-400">SABURO</div>
+                <div class="text-3xl font-bold text-blue-400">VAULT-TEC</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 glow-text">
+                    <span class="neon-text">SYSTEM</span> MODULES
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Customize your cybernetic experience with our modular enhancement packages
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="cyber-card p-8 rounded-xl fade-in delay-1">
+                    <div class="w-16 h-16 rounded-lg bg-cyan-500 bg-opacity-20 flex items-center justify-center mb-6 pulse-glow">
+                        <i class="fas fa-eye text-cyan-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">OPTICAL ENHANCEMENT</h3>
+                    <p class="text-gray-300 mb-6">
+                        Augment your vision with night vision, thermal imaging, and augmented reality overlays.
+                    </p>
+                    <div class="h-px bg-gray-700 mb-6"></div>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-cyan-400 mr-2"></i>
+                            Low-light amplification
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-cyan-400 mr-2"></i>
+                            Target tracking
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-cyan-400 mr-2"></i>
+                            Data visualization
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="cyber-card p-8 rounded-xl fade-in delay-2">
+                    <div class="w-16 h-16 rounded-lg bg-emerald-500 bg-opacity-20 flex items-center justify-center mb-6 pulse-glow">
+                        <i class="fas fa-brain text-emerald-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">NEURAL PROCESSOR</h3>
+                    <p class="text-gray-300 mb-6">
+                        Boost cognitive functions with our quantum neural accelerator chipset.
+                    </p>
+                    <div class="h-px bg-gray-700 mb-6"></div>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-emerald-400 mr-2"></i>
+                            Memory enhancement
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-emerald-400 mr-2"></i>
+                            Processing speed +300%
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-emerald-400 mr-2"></i>
+                            Language matrix
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="cyber-card p-8 rounded-xl fade-in delay-3">
+                    <div class="w-16 h-16 rounded-lg bg-purple-500 bg-opacity-20 flex items-center justify-center mb-6 pulse-glow">
+                        <i class="fas fa-fingerprint text-purple-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">CYBERLIMBS</h3>
+                    <p class="text-gray-300 mb-6">
+                        Military-grade prosthetic limbs with full neural integration.
+                    </p>
+                    <div class="h-px bg-gray-700 mb-6"></div>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-purple-400 mr-2"></i>
+                            Titanium alloy frame
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-purple-400 mr-2"></i>
+                            Hydraulic strength boost
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-purple-400 mr-2"></i>
+                            Weapon integration
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Demo Section -->
+    <section class="py-24 bg-gradient-to-br from-cyan-900/20 to-emerald-900/20 border-t border-b border-cyan-500 border-opacity-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-16 lg:mb-0 fade-in">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8 glow-text">
+                        EXPERIENCE <span class="neon-text">THE</span> 
+                        <br>UPGRADE
+                    </h2>
+                    <p class="text-xl text-gray-300 mb-8 max-w-lg">
+                        Our neural interface demo will give you a glimpse of the enhanced reality that awaits.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-lg bg-cyan-500 bg-opacity-20 flex items-center justify-center mr-4 mt-1 pulse-glow">
+                                <i class="fas fa-eye text-cyan-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">VISUAL OVERLAY</h4>
+                                <p class="text-gray-400">Augmented reality data streams directly to your optic nerve.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-lg bg-emerald-500 bg-opacity-20 flex items-center justify-center mr-4 mt-1 pulse-glow">
+                                <i class="fas fa-wifi text-emerald-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">NEURAL NET</h4>
+                                <p class="text-gray-400">Direct brain-to-network connection at quantum speeds.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-lg bg-purple-500 bg-opacity-20 flex items-center justify-center mr-4 mt-1 pulse-glow">
+                                <i class="fas fa-memory text-purple-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">COGNITIVE BOOST</h4>
+                                <p class="text-gray-400">Expand your mental capacity with our neural processors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 relative fade-in delay-1">
+                    <div class="cyber-card rounded-xl overflow-hidden">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2340&auto=format&fit=crop" alt="Neural Interface" class="w-full h-auto">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-6">
+                                <h3 class="text-2xl font-bold mb-2 neon-text">NEURAL LINK ACTIVE</h3>
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-800 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-cyan-500 to-emerald-500 h-full rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm">85% SYNC</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-cyan-500 bg-opacity-10 blur-3xl -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 glow-text">
+                    USER <span class="neon-text">TESTIMONIALS</span>
+                </h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Hear from those who have already upgraded their existence
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="cyber-card p-8 rounded-xl fade-in delay-1">
+                    <div class="flex items-center mb-6">
+                        <div class="flex -space-x-2">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" class="w-12 h-12 rounded-full border-2 border-gray-800" alt="Testimonial">
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">JENNIFER K.</h4>
+                            <p class="text-sm text-gray-400">NEUROTECH RESEARCHER</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-6">
+                        "The cognitive enhancement modules have increased my research productivity by 300%. I can process complex data streams effortlessly."
+                    </p>
+                    <div class="flex">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="cyber-card p-8 rounded-xl fade-in delay-2">
+                    <div class="flex items-center mb-6">
+                        <div class="flex -space-x-2">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full border-2 border-gray-800" alt="Testimonial">
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">MARCUS R.</h4>
+                            <p class="text-sm text-gray-400">SECURITY SPECIALIST</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-6">
+                        "My cybernetic arm has 10x the strength of my original limb. The neural interface makes it feel completely natural."
+                    </p>
+                    <div class="flex">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star-half-alt text-yellow-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="cyber-card p-8 rounded-xl fade-in delay-3">
+                    <div class="flex items-center mb-6">
+                        <div class="flex -space-x-2">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-12 h-12 rounded-full border-2 border-gray-800" alt="Testimonial">
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">ELENA S.</h4>
+                            <p class="text-sm text-gray-400">DATA ANALYST</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-6">
+                        "With the visual enhancement package, I can see data patterns that were completely invisible before. It's like a new sense."
+                    </p>
+                    <div class="flex">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="cyber-card rounded-2xl p-16 text-center relative overflow-hidden">
+                <!-- Floating elements -->
+                <div class="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-cyan-500 bg-opacity-10 blur-3xl -z-10"></div>
+                <div class="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-emerald-500 bg-opacity-10 blur-3xl -z-10"></div>
+                
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 glow-text">
+                    READY FOR <span class="neon-text">UPGRADE</span>?
+                </h2>
+                <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10">
+                    Begin your transformation today. Our neural integration specialists are standing by.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <button class="px-8 py-4 cyber-button pulse-glow font-medium">
+                        SCHEDULE PROCEDURE
+                    </button>
+                    <button class="px-8 py-4 border border-cyan-500 rounded-xl hover:bg-cyan-900 hover:bg-opacity-20 transition font-medium text-cyan-400">
+                        CONSULTATION
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-80 pt-20 pb-12 border-t border-cyan-500 border-opacity-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-5 gap-12 mb-16">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-600 to-emerald-600 flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold neon-text">NEXUS</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Redefining human potential through cybernetic enhancement.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-cyan-600 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-emerald-600 transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-purple-600 transition">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-600 transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-cyan-400">SYSTEMS</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Neural Interfaces</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Cyberlimbs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Sensory Upgrades</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Implants</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-emerald-400">SERVICES</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-400 transition">Installation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-400 transition">Maintenance</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-400 transition">Upgrades</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-emerald-400 transition">Training</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-purple-400">RESOURCES</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-purple-400 transition">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-400 transition">Developers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-400 transition">Research</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-400 transition">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-red-400">COMPANY</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">Contact</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-12 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2077 NEXUS CYBERNETICS. ALL RIGHTS RESERVED.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition">PRIVACY</a>
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition">TERMS</a>
+                    <a href="#" class="text-gray-400 hover:text-cyan-400 transition">COOKIES</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animate elements when they come into view
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.fade-in');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Initialize animations when page loads
+        window.addEventListener('load', animateOnScroll);
+        
+        // Animate on scroll
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Create floating particles
+        const createParticles = () => {
+            const container = document.body;
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random properties
+                const size = Math.random() * 3 + 1;
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 10;
+                const opacity = Math.random() * 0.4 + 0.1;
+                
+                // Apply styles
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                particle.style.opacity = opacity;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                // Random color
+                const colors = ['#00fffc', '#00ff99', '#9900ff'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = color;
+                
+                container.appendChild(particle);
+            }
+        };
+        
+        // Create particles on load
+        window.addEventListener('load', createParticles);
+        
+        // Terminal typing effect
+        const terminalTyping = () => {
+            const terminal = document.querySelector('.terminal-content');
+            if (!terminal) return;
+            
+            const commands = [
+                "connect --user anonymous",
+                "download --package neural_boost --version 3.7.2",
+                "install --component visual_overlay --confirm",
+                "run --diagnostic full",
+                "status --system all"
+            ];
+            
+            let currentCommand = 0;
+            let currentChar = 0;
+            let isDeleting = false;
+            let isWaiting = false;
+            
+            const type = () => {
+                const commandLine = terminal.querySelector('.command-line');
+                if (!commandLine) return;
+                
+                if (isWaiting) {
+                    setTimeout(() => {
+                        isWaiting = false;
+                        type();
+                    }, 2000);
+                    return;
+                }
+                
+                if (isDeleting) {
+                    commandLine.textContent = commands[currentCommand].substring(0, currentChar - 1) + '_';
+                    currentChar--;
+                    
+                    if (currentChar === 0) {
+                        isDeleting = false;
+                        currentCommand = (currentCommand + 1) % commands.length;
+                        setTimeout(type, 500);
+                        return;
+                    }
+                } else {
+                    commandLine.textContent = commands[currentCommand].substring(0, currentChar + 1) + '_';
+                    currentChar++;
+                    
+                    if (currentChar === commands[currentCommand].length) {
+                        isWaiting = true;
+                        commandLine.textContent = commands[currentCommand] + '_';
+                        setTimeout(() => {
+                            const output = document.createElement('div');
+                            output.className = 'command-output';
+                            output.innerHTML = `
+                                <div>> COMMAND EXECUTED</div>
+                                <div>> STATUS: <span class="text-green-400">SUCCESS</span></div>
+                            `;
+                            terminal.insertBefore(output, commandLine.nextSibling);
+                            setTimeout(() => {
+                                isDeleting = true;
+                                type();
+                            }, 1500);
+                        }, 1000);
+                        return;
+                    }
+                }
+                
+                setTimeout(type, isDeleting ? 50 : 100);
+            };
+            
+            setTimeout(type, 2000);
+        };
+        
+        // Initialize terminal typing
+        window.addEventListener('load', terminalTyping);
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.querySelector('.lg\\:hidden');
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                // This would toggle a mobile menu
+                alert('MOBILE MENU WOULD OPEN HERE IN A FULL IMPLEMENTATION');
+            });
+        }
+    </script>
+</body>
+</html>
